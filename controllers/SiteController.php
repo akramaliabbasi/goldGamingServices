@@ -61,6 +61,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+		
+		Yii::$app->language = 'ko-KR'; // switch to Korean language
         return $this->render('index');
     }
 
@@ -123,6 +125,8 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
+		
+		Yii::$app->language = 'ko-KR'; // switch to Korean language
         return $this->render('about');
     }
 }

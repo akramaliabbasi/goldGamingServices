@@ -3,6 +3,10 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+
+
+
+
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
@@ -10,8 +14,27 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+		'@app' => dirname(__DIR__),
+		'@components' => '@app/components',
     ],
     'components' => [
+	
+		'authManager' => [
+			'class' => 'yii\rbac\DbManager',
+		],
+		'as access' => [
+			'class' => 'mdm\admin\components\AccessControl',
+			'allowActions' => [
+				'admin/*',
+			],
+			'rules' => [
+				[
+					'allow' => true,
+					'roles' => ['admin'],
+				],
+			],
+		],
+	
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'zwHL1SHKNC0JVN2AoP8BGai-QyDbCqRB',
@@ -42,17 +65,41 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+		'i18n' => [
+			'translations' => [
+				'app*' => [
+					'class' => 'yii\i18n\PhpMessageSource',
+					'basePath' => '@app/messages',
+					'sourceLanguage' => 'en-US',
+					'language' => 'en-US', // default language
+					'fileMap' => [
+						'app' => 'app.php',
+						'app/error' => 'error.php',
+					],
+				],
+			],
+		],
+        
     ],
     'params' => $params,
 ];
+
+
+$config['modules'] = [  
+	  'product' => [ 
+		'class' => 'app\modules\product\Module', 
+	  ],
+	  'admin' => [
+				'class' => 'mdm\admin\Module',
+	 ],
+];
+
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
@@ -60,8 +107,10 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['*'],
     ];
+	
+	
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
@@ -70,5 +119,10 @@ if (YII_ENV_DEV) {
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
+
+
+
+
+
 
 return $config;
